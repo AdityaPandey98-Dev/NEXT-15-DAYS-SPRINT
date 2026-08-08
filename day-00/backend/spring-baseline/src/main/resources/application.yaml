@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: spring-baseline
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/sprint_baseline
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+server:
+  port: 8080
