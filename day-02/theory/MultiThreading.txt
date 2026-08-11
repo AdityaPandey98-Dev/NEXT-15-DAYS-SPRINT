@@ -1,0 +1,117 @@
+                                                                 Multithreading
+                                                              ====================
+Process :
+         A process is an independent execution environment created by the operating system for running a program. 
+         It has its own memory space and resources and can contain multiple threads.
+
+Thread : 
+         A thread is an independent path of execution within a process. Multiple threads can exist inside the 
+         same process and share its resources, especially heap memory, while maintaining their own execution state and stack.
+
+  Process vs Thread
+  =================
+                     Process	                                                  Thread
+          Independent execution environment	                       Execution unit inside a process
+          Has its own address space	                               Shares process address space
+          More resource-heavy	                                       More lightweight
+          Process creation is relatively expensive	               Thread creation is generally cheaper
+          Communication requires IPC mechanisms	                       Threads can communicate through shared memory
+          Failure is generally isolated from other processes	       A serious failure can affect the entire process
+          Can contain multiple threads	                               Belongs to a process
+
+
+Concurrency :
+              Concurrency means dealing with multiple tasks during overlapping periods of time.
+               Example  : A A A B B A A B B A A B  ==> (A single CPU/core can make progress on multiple tasks by switching between them.)
+Parallelism : 
+              Parallelism means multiple tasks are actually executing at the same time, typically on multiple CPU cores.
+               Example : 
+                          Core 1: A A A A A
+                          Core 2: B B B B B
+
+   Concurrency vs Parallelism
+  =============================
+                  Concurrency	                                                    Parallelism
+        Multiple tasks make progress over overlapping periods	             Multiple tasks execute simultaneously
+        Can happen on one CPU core	                                     Usually requires multiple execution cores
+        Focuses on managing multiple tasks	                             Focuses on simultaneous execution
+        Doesn't require simultaneous execution	                             Requires simultaneous execution
+        Example: task switching	                                             Example: two cores executing two tasks
+
+
+  Easy way to remember
+  --------------------
+                         Concurrency = dealing with many things.
+                         Parallelism = doing many things at the same time.
+
+     Note: If the machine has multiple CPU cores and multiple threads are executing simultaneously on different cores, the work can also be parallel.
+
+
+
+  Thread-Based Execution : One process uses multiple threads.
+                           Example : OS ==> Process 1 [ {Thread(1), Thread(2), Thread(3), Thread(4),Thread(5) } {(Single Shared Memory)} ]
+
+  Process-based : Multiple processes perform work independently.  
+                  Example : OS ==> Process A(Thread(s), Memory) | Process A(Thread(s), Memory)| Process A(Thread(s), Memory)
+
+30-Second Mental Model
+======================
+Remember this:
+**************
+     PROGRAM
+        ↓
+     PROCESS
+        ↓
+     Contains
+        ↓
+     THREADS
+        ↓
+     Execute
+        ↓
+      TASKS
+
+And:
+****
+Process
+ ├── Own address space
+ ├── Own resources
+ └── Multiple threads
+        │
+        ├── Share process resources
+        ├── Own stack(Stack, PC Register)
+        └── Execute concurrently
+
+Finally:
+         CONCURRENCY = Multiple tasks making progress
+         PARALLELISM= Multiple tasks executing simultaneously
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Thread Creation 
+===============
+       Three Ways : 
+1. By Extending Thread Class
+2. By Implementing Runnable Interface
+3. By Using Lambda with Runnable(Java 8)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
