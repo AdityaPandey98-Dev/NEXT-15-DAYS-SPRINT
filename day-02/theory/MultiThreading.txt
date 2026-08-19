@@ -1,5 +1,16 @@
                                                                  Multithreading
-                                                              ====================
+ Multithreading 
+ ==============
+       Multithreading in Java is a core platform feature that allows the concurrent execution of two or more parts of a program to maximize CPU utilization. 
+       Each independent path of execution within the program is called a thread, which behaves like a lightweight sub-process sharing the same memory space.
+
+ Why Use Multithreading?
+=========================
+           Better CPU usage: Executes multiple tasks simultaneously.
+           Improved responsiveness: Prevents background tasks from freezing the UI.
+           Resource sharing: Threads utilize the same memory space, reducing context-switch overhead.                                                              ====================
+
+
 Process :
          A process is an independent execution environment created by the operating system for running a program. 
          It has its own memory space and resources and can contain multiple threads.
@@ -90,12 +101,165 @@ Finally:
 
 Thread Creation 
 ===============
-       Three Ways : 
+ In Java, there are four main ways to create and manage threads. While the first two are the classic foundational methods, 
+          the last two are modern approaches used in professional production environments.and one with help of java 8.
+     Five Ways : 
 1. By Extending Thread Class
 2. By Implementing Runnable Interface
 3. By Using Lambda with Runnable(Java 8)
+4. By Implementing the Callable Interface (with Future)
+5. By Using the Thread Pool / Executor Framework
+ 
+
+  1. By Extending Thread Class
+====================================
+The simplest way to create a thread is to extend the Thread class and override run().
+
+class MyThread extends Thread {
+
+    @Override
+    public void run() {
+        System.out.println("Task is running");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        MyThread thread = new MyThread();
+
+        thread.start();
+    }
+}
 
 
+ What happens?(Flow)
+----------------------
+         main() ==> new MyThread() ==> thread.start() ==> JVM/OS schedules thread ==> run() ==> Task executes
+
+
+  2️. Implementing Runnable
+==============================
+Instead of extending Thread, implement Runnable. // WHY ?
+
+class MyTask implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("Task is running");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Runnable task = new MyTask();
+
+        Thread thread = new Thread(task);  //Concept
+
+        thread.start();
+    }
+}
+
+
+The relationship is:
+--------------------
+             Runnable ==> defines the task     &         Thread ==> executes the task.        This separation is important.
+
+      Runnable preffered over extends because Runnable gives better separation between: What should be done? and Which thread executes it?
+
+
+  3.  By Using Lambda with Runnable(Java 8)
+  =========================================
+  Runnable is a functional interface, because it has one abstract method:            void run();            Therefore, we can use a lambda.
+
+so instead of writing this code
+-------------------------------
+                  Runnable task = new Runnable() {
+                      @Override
+                      public void run() {
+                          System.out.println("Task running");
+                          }
+                       };
+
+       we can write:                                                                              Or even:
+
+   Runnable task = () -> { System.out.println("Task running"); };                           Thread thread = new Thread(() -> {System.out.println("Task running");});
+                                                       
+ start() vs run()
+================== 
+
+Thread thread = new Thread(() -> {
+    System.out.println("Hello");
+});
+
+thread.start();   =====> for start() 
+thread.run();     =====> for run()  
+ 
+                                                          
+ start()
+---------                                                                                       
+start() : tells the JVM that the thread should begin execution. The JVM schedules the new thread, and its run() method is invoked as part of that thread's execution.
+          main thread ==> start() ==> new thread ==> run()
+  
+  run()
+ ------
+          You are simply calling the method like a normal Java method. No new thread is created by that call.
+          main thread ===> run() ===> run() executes on main thread
+
+ 4. By Implementing the Callable Interface (with Future)
+
+            Introduced to fix the limitations of Runnable. It must be executed using an ExecutorService.
+            Pros: Can return a data value after finishing and can throw checked exceptions.
+            Cons: Slightly more complex boilerplate code to set up.
+
+  JAVA Code
+-------------
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+class MyCallable implements Callable<String> {
+    public String call() throws Exception {
+        return "Task Completed!";
+    }
+}
+
+// How to start it:
+ExecutorService executor = Executors.newSingleThreadExecutor();
+Future<String> future = executor.submit(new MyCallable());
+
+// Retrieve the result later:
+String result = future.get(); 
+executor.shutdown();
+
+
+ 5. By Using the Thread Pool / Executor Framework
+
+        Instead of manually creating Thread objects every time, you use a pre-built pool of managed threads.
+        Pros: Highly efficient for large applications because it reuses existing threads instead of wasting CPU creating new ones.
+        Cons: Requires managing the lifecycle of the pool (shutting it down properly).
+
+  JAVA Code
+-------------
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+// Create a pool of 3 reusable threads
+ExecutorService pool = Executors.newFixedThreadPool(3);
+
+// Submit multiple tasks to the pool
+pool.execute(() -> System.out.println("Task 1 running"));
+pool.execute(() -> System.out.println("Task 2 running"));
+
+// Turn off the pool when done
+pool.shutdown();
+Use code with caution.
+
+
+// Day 02 sprint to know more.
+                                                                                           
 
 
 
